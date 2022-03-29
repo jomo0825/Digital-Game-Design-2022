@@ -6,18 +6,30 @@ namespace MyFramework
 {
     public class TouchInputDevice : InputDevice
     {
-        public Joystick joystick;
+        public Joystick joystickMove;
+        public Joystick joystickRotate;
         public JoystickButton buttonA;
 
-        public override Vector2 ReadAxis()
+        public override Vector2 ReadAxisMove()
         {
-            if (joystick == null)
+            if (joystickMove == null)
             {
                 return Vector2.zero;
             }
-            axis.x = joystick.Horizontal;
-            axis.y = joystick.Vertical;
-            return axis;
+            axisMove.x = joystickMove.Horizontal;
+            axisMove.y = joystickMove.Vertical;
+            return axisMove;
+        }
+
+        public override Vector2 ReadAxisRotate()
+        {
+            if (joystickRotate == null)
+            {
+                return Vector2.zero;
+            }
+            axisRotate.x = joystickRotate.Horizontal;
+            axisRotate.y = joystickRotate.Vertical;
+            return axisRotate;
         }
 
         public override bool ReadBtnAttack()
@@ -32,7 +44,7 @@ namespace MyFramework
 
         public override void SetDisplay(bool value)
         {
-            joystick.gameObject.SetActive(value);
+            joystickMove.gameObject.SetActive(value);
             buttonA.gameObject.SetActive(value);
         }
     }

@@ -10,7 +10,8 @@ namespace MyFramework
     {
         private InputDevice device;
 
-        public UnityEvent<Vector2> IsAxis;
+        public UnityEvent<Vector2> IsAxisMove;
+        public UnityEvent<Vector2> IsAxisRotate;
         public UnityEvent<bool> IsBtnAttack;
         public UnityEvent OnBtnAttack;
 
@@ -40,8 +41,9 @@ namespace MyFramework
 
         void Update()
         {
-            Singletons.Get<DebugUI>().Print(device?.ReadAxis().ToString() + "\n" + device?.ReadBtnAttack().ToString());
-            IsAxis?.Invoke(device.ReadAxis());
+            Singletons.Get<DebugUI>().Print(device?.ReadAxisMove().ToString() + "\n" + device?.ReadBtnAttack().ToString());
+            IsAxisMove?.Invoke(device.ReadAxisMove());
+            IsAxisRotate?.Invoke(device.ReadAxisRotate());
             IsBtnAttack?.Invoke(device.ReadBtnAttack());
 
             newBtnAttack = device.ReadBtnAttack();

@@ -6,11 +6,18 @@ namespace MyFramework
 {
     public class KeyboardInputDevice : InputDevice
     {
-        public override Vector2 ReadAxis()
+        public override Vector2 ReadAxisMove()
         {
-            axis.x = Input.GetAxis("Horizontal");
-            axis.y = Input.GetAxis("Vertical");
-            return axis;
+            axisMove.x = Input.GetAxis("Horizontal");
+            axisMove.y = Input.GetAxis("Vertical");
+            return axisMove;
+        }
+
+        public override Vector2 ReadAxisRotate()
+        {
+            axisRotate.x = Input.GetAxis("Mouse X");
+            axisRotate.y = Input.GetAxis("Mouse Y");
+            return axisRotate ;
         }
 
         public override bool ReadBtnAttack()

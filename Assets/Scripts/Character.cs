@@ -2,13 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SPStudios.Tools;
+using System;
 
 namespace MyFramework
 {
     [RequireComponent(typeof(CharacterController))]
     public class Character : MonoBehaviour
     {
-        public float speed = 5.0f;
+        public float moveSpeed = 5.0f;
+        public float camYawSpeed = 250f;
+        public float camPitchSpeed = 50f;
         public Animator anim;
         public CharacterController cc;
 
@@ -42,22 +45,34 @@ namespace MyFramework
         private void OnEnable()
         {
             // Use singleton plugin.
-            Singletons.Get<MyFramework.InputManager>().IsAxis.AddListener(MoveCharacter);
+            Singletons.Get<MyFramework.InputManager>().IsAxisMove.AddListener(MoveCharacter);
+            Singletons.Get<MyFramework.InputManager>().IsAxisRotate.AddListener(RotateCamera);
         }
 
         private void OnDisable()
         {
-            Singletons.Get<MyFramework.InputManager>().IsAxis.RemoveListener(MoveCharacter);
+            Singletons.Get<MyFramework.InputManager>().IsAxisMove.RemoveListener(MoveCharacter);
+            Singletons.Get<MyFramework.InputManager>().IsAxisRotate.RemoveListener(RotateCamera);
+        }
+
+        private void RotateCamera(Vector2 axis)
+        {
+            Quaternion modelRot = anim.transform.rotation;
+            transform.Rotate(Vector3.up, axis.x * camYawSpeed * Time.deltaTime);
+            anim.transform.rotation = modelRot;
+
+            Camera.main.SendMessage("SetPitchAngle", (object)(axis.y * camPitchSpeed * Time.deltaTime), SendMessageOptions.DontRequireReceiver);
         }
 
         // Character motor function.
-        public void MoveCharacter(Vector2 axis)
+        public void MoveCharacter(Vector2 axisMove)
         {
-            moveVec.x = axis.x;
+            moveVec.x = axisMove.x;
             moveVec.y = 0;
-            moveVec.z = axis.y;
+            moveVec.z = axisMove.y;
+            moveVec = transform.TransformVector(moveVec);
             //transform.Translate(moveVec * speed * Time.deltaTime, Space.World);
-            cc?.SimpleMove(moveVec * speed);
+            cc?.SimpleMove(moveVec * moveSpeed);
         }
     }
 }
